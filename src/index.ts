@@ -9,6 +9,7 @@ import { streamRouter } from './routes/stream';
 import { songsRouter } from './routes/songs';
 import { lyricsRouter } from './routes/lyrics';
 import { analyticsRouter } from './routes/analytics';
+import { jamRouter } from './routes/jam';
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use('/api/stream', streamRouter);
 app.use('/api/songs', songsRouter);
 app.use('/api/lyrics', lyricsRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/api/jam', jamRouter);
 
 // Health Check Endpoint
 app.get('/api/health', (_req: Request, res: Response) => {
