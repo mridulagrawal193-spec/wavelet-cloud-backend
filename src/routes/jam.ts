@@ -41,12 +41,14 @@ setInterval(() => {
  * Create a new Jam room
  */
 jamRouter.post('/create', (req: Request, res: Response) => {
-  const { hostId, hostName, avatar, track, positionMs, isPlaying } = req.body;
+  const { hostId, hostName, avatar, track, positionMs, isPlaying, roomCode: requestedCode } = req.body;
   
-  // Generate random 4-digit room code
-  let roomCode = Math.floor(1000 + Math.random() * 9000).toString();
-  while (activeRooms.has(roomCode)) {
-    roomCode = Math.floor(1000 + Math.random() * 9000).toString();
+  // Use requested 6-digit code from client if present, else generate random 6-digit room code
+  let roomCode = requestedCode && String(requestedCode).trim().length >= 4
+    ? String(requestedCode).trim()
+    : Math.floor(100000 + Math.random() * 900000).toString();
+  while (!requestedCode && activeRooms.has(roomCode)) {
+    roomCode = Math.floor(100000 + Math.random() * 900000).toString();
   }
 
   const now = Date.now();
@@ -92,7 +94,7 @@ jamRouter.post('/join', (req: Request, res: Response) => {
   if (!room) {
     return res.status(404).json({
       success: false,
-      error: `Jam room #${cleanCode} not found. Please verify the 4-digit code.`,
+      error: `Jam room #${cleanCode} not found. Please verify the 6-digit code.`,
     });
   }
 
